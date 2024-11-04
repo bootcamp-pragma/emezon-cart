@@ -2,6 +2,7 @@ package com.emezon.cart.infra.security;
 
 import com.emezon.cart.domain.spi.IJwtHolder;
 import com.emezon.cart.domain.spi.IJwtService;
+import com.emezon.cart.infra.outbound.feign.IUserFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -75,11 +76,6 @@ public class SecurityConfig {
         authProvider.setUserDetailsService(userDetailsService());
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
-    }
-
-    @Bean
-    public SecurityConstants securityConstants() {
-        return new SecurityConstants();
     }
 
 }
