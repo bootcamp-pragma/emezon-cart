@@ -1,6 +1,6 @@
 package com.emezon.cart.infra.outbound.feign.dtos;
 
-import com.emezon.stock.infra.security.SecurityConstants;
+import com.emezon.cart.infra.security.SecurityConstants;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

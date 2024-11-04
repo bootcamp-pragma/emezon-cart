@@ -1,8 +1,8 @@
 package com.emezon.cart.infra.outbound.feign.config;
 
-import com.emezon.stock.domain.spi.IJwtHolder;
-import com.emezon.stock.infra.outbound.feign.utils.CustomErrorDecoder;
-import com.emezon.stock.infra.outbound.feign.utils.FeignClientInterceptor;
+import com.emezon.cart.domain.spi.IJwtHolder;
+import com.emezon.cart.infra.outbound.feign.utils.CustomErrorDecoder;
+import com.emezon.cart.infra.outbound.feign.utils.FeignClientInterceptor;
 import feign.codec.ErrorDecoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
