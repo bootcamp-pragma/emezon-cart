@@ -6,18 +6,20 @@ import java.time.LocalDateTime;
 
 public class Cart {
 
-    private  String id;
+    private String id;
     private User client;
     private double total;
+    private int status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public Cart() {}
 
-    public Cart(String id, User client, double total) {
+    public Cart(String id, User client, double total, int status) {
         this.id = id;
         this.client = client;
         this.total = total;
+        this.status = status;
     }
 
     public String getId() {
@@ -58,5 +60,13 @@ public class Cart {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

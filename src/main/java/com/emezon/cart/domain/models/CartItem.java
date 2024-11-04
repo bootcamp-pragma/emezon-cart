@@ -10,18 +10,16 @@ public class CartItem {
     private Cart cart;
     private Article article;
     private int quantity;
-    private Double priceAtPurchase;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public CartItem() {}
 
-    public CartItem(String id, Cart cart, Article article, int quantity, Double priceAtPurchase) {
+    public CartItem(String id, Cart cart, Article article, int quantity) {
         this.id = id;
         this.cart = cart;
         this.article = article;
         this.quantity = quantity;
-        this.priceAtPurchase = priceAtPurchase;
     }
 
     public String getId() {
@@ -54,14 +52,6 @@ public class CartItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public Double getPriceAtPurchase() {
-        return priceAtPurchase;
-    }
-
-    public void setPriceAtPurchase(Double priceAtPurchase) {
-        this.priceAtPurchase = priceAtPurchase;
     }
 
     public LocalDateTime getCreatedAt() {
