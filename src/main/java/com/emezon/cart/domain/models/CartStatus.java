@@ -13,7 +13,7 @@ public enum CartStatus {
     }
 
     public int getStatus() {
-        return status;
+        return this.status;
     }
 
     @Override
