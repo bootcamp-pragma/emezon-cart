@@ -2,10 +2,10 @@ package com.emezon.cart.domain.spi;
 
 public interface IJwtHolder {
 
-    public String getToken();
+    String getToken();
 
-    public void setToken(String token);
+    void setToken(String token);
 
-    public void clearToken();
+    void clearToken();
     
 }

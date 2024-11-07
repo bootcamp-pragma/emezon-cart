@@ -1,12 +1,15 @@
 package com.emezon.cart.infra.security;
 
 import com.emezon.cart.domain.spi.IJwtService;
+import com.emezon.cart.infra.outbound.feign.dtos.UserFeign;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.security.Key;
 import java.util.Date;
@@ -67,6 +70,18 @@ public class JwtService implements IJwtService {
     @Override
     public String getRoleName(String token) {
         return extractClaim(token, claims -> (String) claims.get(SecurityConstants.ROLE_NAME_CLAIM));
+    }
+
+    @Override
+    public String getAuthenticatedUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserFeign user) {
+                return user.getId();
+            }
+        }
+        return null;
     }
 
 

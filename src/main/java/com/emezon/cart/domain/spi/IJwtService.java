@@ -5,13 +5,14 @@ import java.util.function.Function;
 
 public interface IJwtService {
 
-    public String extractUsername(String token);
+    String extractUsername(String token);
 
-    public <T> T extractClaim(String token, Function<Map<String, Object>, T> claimsResolver);
+    <T> T extractClaim(String token, Function<Map<String, Object>, T> claimsResolver);
 
-    public boolean isTokenValid(String token, Map<String, Object> data);
+    boolean isTokenValid(String token, Map<String, Object> data);
 
-    public String getRoleName(String token);
+    String getRoleName(String token);
 
+    String getAuthenticatedUserId();
 
 }
