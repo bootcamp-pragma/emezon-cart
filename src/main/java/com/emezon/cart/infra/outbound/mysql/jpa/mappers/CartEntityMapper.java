@@ -8,6 +8,9 @@ public class CartEntityMapper {
     private CartEntityMapper() { }
 
     public static Cart toModel(CartEntity entity, boolean includeItems) {
+        if (entity == null) {
+            return null;
+        }
         Cart model = new Cart();
         model.setId(entity.getId());
         model.setClientId(entity.getClientId());
@@ -24,6 +27,9 @@ public class CartEntityMapper {
     }
 
     public static CartEntity toEntity(Cart model, boolean includeItems) {
+        if (model == null) {
+            return null;
+        }
         CartEntity entity = new CartEntity();
         entity.setId(model.getId());
         entity.setClientId(model.getClientId());
