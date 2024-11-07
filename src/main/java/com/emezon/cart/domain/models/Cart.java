@@ -1,14 +1,12 @@
 package com.emezon.cart.domain.models;
 
-import com.emezon.cart.domain.models.external.User;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class Cart {
 
     private String id;
-    private User client;
+    private String clientId;
     private double total;
     private int status;
     private List<CartItem> items;
@@ -16,13 +14,6 @@ public class Cart {
     private LocalDateTime updatedAt;
 
     public Cart() {}
-
-    public Cart(String id, User client, double total, int status) {
-        this.id = id;
-        this.client = client;
-        this.total = total;
-        this.status = status;
-    }
 
     public String getId() {
         return id;
@@ -32,12 +23,12 @@ public class Cart {
         this.id = id;
     }
 
-    public User getClient() {
-        return client;
+    public String getClientId() {
+        return clientId;
     }
 
-    public void setClient(User client) {
-        this.client = client;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
     public double getTotal() {
@@ -46,22 +37,6 @@ public class Cart {
 
     public void setTotal(double total) {
         this.total = total;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public int getStatus() {
@@ -78,5 +53,21 @@ public class Cart {
 
     public void setItems(List<CartItem> items) {
         this.items = items;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

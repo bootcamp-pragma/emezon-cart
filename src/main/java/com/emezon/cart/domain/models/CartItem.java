@@ -1,26 +1,17 @@
 package com.emezon.cart.domain.models;
 
-import com.emezon.cart.domain.models.external.Article;
-
 import java.time.LocalDateTime;
 
 public class CartItem {
 
     private String id;
     private Cart cart;
-    private Article article;
+    private String articleId;
     private int quantity;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     public CartItem() {}
-
-    public CartItem(String id, Cart cart, Article article, int quantity) {
-        this.id = id;
-        this.cart = cart;
-        this.article = article;
-        this.quantity = quantity;
-    }
 
     public String getId() {
         return id;
@@ -38,12 +29,12 @@ public class CartItem {
         this.cart = cart;
     }
 
-    public Article getArticle() {
-        return article;
+    public String getArticleId() {
+        return articleId;
     }
 
-    public void setArticle(Article article) {
-        this.article = article;
+    public void setArticleId(String articleId) {
+        this.articleId = articleId;
     }
 
     public int getQuantity() {
