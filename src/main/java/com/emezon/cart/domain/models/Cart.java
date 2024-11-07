@@ -3,6 +3,7 @@ package com.emezon.cart.domain.models;
 import com.emezon.cart.domain.models.external.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Cart {
 
@@ -10,6 +11,7 @@ public class Cart {
     private User client;
     private double total;
     private int status;
+    private List<CartItem> items;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
@@ -68,5 +70,13 @@ public class Cart {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public List<CartItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<CartItem> items) {
+        this.items = items;
     }
 }
