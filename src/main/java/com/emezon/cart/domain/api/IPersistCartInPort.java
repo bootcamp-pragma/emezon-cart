@@ -6,4 +6,10 @@ public interface IPersistCartInPort {
 
     Cart createCart(Cart cart);
 
+    Cart updateCart(Cart cart);
+
+    void deleteCart(String id);
+
+    Cart removeItemFromCart(String cartId, String itemId);
+
 }
