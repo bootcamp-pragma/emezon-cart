@@ -33,6 +33,16 @@ public class MySQLJpaCartItemAdapter implements ICartItemRepositoryOutPort {
     }
 
     @Override
+    public Optional<CartItem> findByCartIdAndArticleId(String cartId, String articleId) {
+        return repository.findByCartIdAndArticleId(cartId, articleId).map(e -> CartItemEntityMapper.toModel(e, true));
+    }
+
+    @Override
+    public Optional<CartItem> findByUserIdAndArticleId(String userId, String articleId) {
+        return Optional.empty();
+    }
+
+    @Override
     public PaginatedResponse<CartItem> findAll(PaginatedResponseParams params) {
         Pageable pageable = PageableUtils.getFromPaginatedResponseParams(params);
         Page<CartItemEntity> page = repository.findAll(pageable);
@@ -46,9 +56,9 @@ public class MySQLJpaCartItemAdapter implements ICartItemRepositoryOutPort {
     }
 
     @Override
-    public PaginatedResponse<CartItem> findByCartId(String cartId, PaginatedResponseParams params) {
+    public PaginatedResponse<CartItem> findAllByCartId(String cartId, PaginatedResponseParams params) {
         Pageable pageable = PageableUtils.getFromPaginatedResponseParams(params);
-        Page<CartItemEntity> page = repository.findByCartId(cartId, pageable);
+        Page<CartItemEntity> page = repository.findAllByCartId(cartId, pageable);
         PaginatedResponse<CartItem> res = new PaginatedResponse<>();
         res.setItems(page.getContent().stream().map(entity -> CartItemEntityMapper.toModel(entity, true)).toList());
         res.setTotalItems(page.getTotalElements());

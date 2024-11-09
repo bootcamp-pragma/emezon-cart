@@ -12,9 +12,13 @@ public interface ICartItemRepositoryOutPort {
 
     Optional<CartItem> findById(String id);
 
+    Optional<CartItem> findByCartIdAndArticleId(String cartId, String articleId);
+
+    Optional<CartItem> findByUserIdAndArticleId(String userId, String articleId);
+
     PaginatedResponse<CartItem> findAll(PaginatedResponseParams params);
 
-    PaginatedResponse<CartItem> findByCartId(String cartId, PaginatedResponseParams params);
+    PaginatedResponse<CartItem> findAllByCartId(String cartId, PaginatedResponseParams params);
 
     void deleteById(String id);
 
