@@ -19,7 +19,7 @@ public class CartDTO {
     private String clientId;
     private double total;
     private int status;
-    private List<CartItem> items;
+    private List<CartItemDTO> items;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
