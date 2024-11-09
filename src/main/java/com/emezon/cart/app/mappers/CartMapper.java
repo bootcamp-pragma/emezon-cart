@@ -13,7 +13,7 @@ public class CartMapper {
         dto.setClientId(model.getClientId());
         dto.setTotal(model.getTotal());
         dto.setStatus(model.getStatus());
-        if (includeItems) {
+        if (includeItems && model.getItems() != null) {
             dto.setItems(model.getItems()
                     .stream().map(item -> CartItemMapper.toDTO(item, false))
                     .toList());
@@ -29,7 +29,7 @@ public class CartMapper {
         model.setClientId(dto.getClientId());
         model.setTotal(dto.getTotal());
         model.setStatus(dto.getStatus());
-        if (includeItems) {
+        if (includeItems && dto.getItems() != null) {
             model.setItems(dto.getItems()
                     .stream().map(item -> CartItemMapper.toModel(item, false))
                     .toList());

@@ -16,7 +16,7 @@ public class CartEntityMapper {
         model.setClientId(entity.getClientId());
         model.setTotal(entity.getTotal());
         model.setStatus(entity.getStatus());
-        if (includeItems) {
+        if (includeItems && entity.getItems() != null) {
             model.setItems(entity.getItems()
                     .stream().map(item -> CartItemEntityMapper.toModel(item, false))
                     .toList());
@@ -35,7 +35,7 @@ public class CartEntityMapper {
         entity.setClientId(model.getClientId());
         entity.setTotal(model.getTotal());
         entity.setStatus(model.getStatus());
-        if (includeItems) {
+        if (includeItems && model.getItems() != null) {
             entity.setItems(model.getItems()
                     .stream().map(item -> CartItemEntityMapper.toEntity(item, false))
                     .toList());
