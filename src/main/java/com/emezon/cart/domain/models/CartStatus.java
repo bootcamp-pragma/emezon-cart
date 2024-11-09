@@ -12,7 +12,7 @@ public enum CartStatus {
         this.status = status;
     }
 
-    public int getStatus() {
+    public int value() {
         return this.status;
     }
 
