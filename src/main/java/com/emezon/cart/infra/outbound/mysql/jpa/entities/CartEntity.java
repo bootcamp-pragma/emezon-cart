@@ -34,7 +34,7 @@ public class CartEntity {
     @Column(nullable = false)
     private int status;
 
-    @OneToMany(mappedBy = "cart")
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItemEntity> items;
 
     @CreationTimestamp
