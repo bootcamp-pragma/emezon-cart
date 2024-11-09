@@ -8,6 +8,9 @@ public class UserFeignMapper {
     private UserFeignMapper() { }
 
     public static UserFeign toUserFeign(User user) {
+        if (user == null) {
+            return null;
+        }
         UserFeign userFeign = new UserFeign();
         userFeign.setId(user.getId());
         userFeign.setName(user.getName());
@@ -21,6 +24,9 @@ public class UserFeignMapper {
     }
 
     public static User toUser(UserFeign userFeign) {
+        if (userFeign == null) {
+            return null;
+        }
         User user = new User();
         user.setId(userFeign.getId());
         user.setName(userFeign.getName());

@@ -15,9 +15,6 @@ public class UserFeignExternalAdapter implements IUserExternalOutPort {
     @Override
     public User findByEmail(String email) {
         UserFeign userFeign = userFeignClient.findUserByEmail(email);
-        if (userFeign == null) {
-            return null;
-        }
         return UserFeignMapper.toUser(userFeign);
     }
 }
