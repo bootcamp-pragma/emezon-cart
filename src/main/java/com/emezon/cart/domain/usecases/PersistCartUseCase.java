@@ -4,6 +4,7 @@ import com.emezon.cart.domain.api.IPersistCartInPort;
 import com.emezon.cart.domain.api.IRetrieveCartInPort;
 import com.emezon.cart.domain.models.Cart;
 import com.emezon.cart.domain.models.CartStatus;
+import com.emezon.cart.domain.spi.ICartRepositoryOutPort;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
@@ -11,7 +12,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PersistCartUseCase implements IPersistCartInPort {
 
-    private final IPersistCartInPort persistCartInPort;
+    private final ICartRepositoryOutPort cartRepository;
     private final IRetrieveCartInPort retrieveCartInPort;
 
     @Override
@@ -23,7 +24,7 @@ public class PersistCartUseCase implements IPersistCartInPort {
             throw new RuntimeException("Cart must have at least one item");
         }
         cart.setStatus(CartStatus.ACTIVE.value());
-        return persistCartInPort.createCart(cart);
+        return cartRepository.save(cart);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class PersistCartUseCase implements IPersistCartInPort {
         if (cartOptional.isEmpty()) {
             throw new RuntimeException("Cart not found");
         }
-        return persistCartInPort.updateCart(cart);
+        return cartRepository.save(cart);
     }
 
     @Override
@@ -41,7 +42,7 @@ public class PersistCartUseCase implements IPersistCartInPort {
         if (cartOptional.isEmpty()) {
             throw new RuntimeException("Cart not found");
         }
-        persistCartInPort.deleteCart(id);
+        cartRepository.deleteById(id);
     }
 
     @Override
@@ -54,9 +55,9 @@ public class PersistCartUseCase implements IPersistCartInPort {
         cart.setItems(cart.getItems().stream().filter(item -> !item.getId().equals(itemId)).toList());
         if (cart.getItems().isEmpty()) {
             cart.setStatus(CartStatus.CANCELED.value());
-            persistCartInPort.updateCart(cart);
+            cartRepository.save(cart);
             return null;
         }
-        return persistCartInPort.updateCart(cart);
+        return cartRepository.save(cart);
     }
 }
