@@ -11,10 +11,13 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
-@RequiredArgsConstructor
 public class RetrieveCartUseCase implements IRetrieveCartInPort {
 
     private final ICartRepositoryOutPort cartRepository;
+
+    public RetrieveCartUseCase(ICartRepositoryOutPort cartRepository) {
+        this.cartRepository = cartRepository;
+    }
 
     @Override
     public Optional<Cart> getCartById(String id) {

@@ -5,15 +5,18 @@ import com.emezon.cart.domain.api.IRetrieveCartInPort;
 import com.emezon.cart.domain.models.Cart;
 import com.emezon.cart.domain.models.CartStatus;
 import com.emezon.cart.domain.spi.ICartRepositoryOutPort;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
-@RequiredArgsConstructor
 public class PersistCartUseCase implements IPersistCartInPort {
 
     private final ICartRepositoryOutPort cartRepository;
     private final IRetrieveCartInPort retrieveCartInPort;
+
+    public PersistCartUseCase(ICartRepositoryOutPort cartRepository, IRetrieveCartInPort retrieveCartInPort) {
+        this.cartRepository = cartRepository;
+        this.retrieveCartInPort = retrieveCartInPort;
+    }
 
     @Override
     public Cart createCart(Cart cart) {
