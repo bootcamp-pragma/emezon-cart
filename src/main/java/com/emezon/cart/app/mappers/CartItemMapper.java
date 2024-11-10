@@ -1,6 +1,7 @@
 package com.emezon.cart.app.mappers;
 
 import com.emezon.cart.app.dtos.CartItemDTO;
+import com.emezon.cart.app.dtos.CreateCartItemDTO;
 import com.emezon.cart.domain.models.CartItem;
 
 public class CartItemMapper {
@@ -30,6 +31,16 @@ public class CartItemMapper {
         if (includeCart) {
             model.setCart(CartMapper.toModel(dto.getCart(), false));
         }
+        model.setArticleId(dto.getArticleId());
+        model.setQuantity(dto.getQuantity());
+        return model;
+    }
+
+    public static CartItem toModel(CreateCartItemDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        CartItem model = new CartItem();
         model.setArticleId(dto.getArticleId());
         model.setQuantity(dto.getQuantity());
         return model;
