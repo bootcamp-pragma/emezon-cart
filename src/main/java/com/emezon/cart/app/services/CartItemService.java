@@ -2,14 +2,14 @@ package com.emezon.cart.app.services;
 
 import com.emezon.cart.app.dtos.CartItemDTO;
 import com.emezon.cart.app.dtos.CreateCartItemDTO;
-import com.emezon.cart.app.handlers.CartItemHandler;
+import com.emezon.cart.app.handlers.ICartItemHandler;
 import com.emezon.cart.app.mappers.CartItemMapper;
 import com.emezon.cart.domain.api.IPersistCartItemInPort;
 import com.emezon.cart.domain.models.CartItem;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public class CartItemService implements CartItemHandler {
+public class CartItemService implements ICartItemHandler {
 
     private final IPersistCartItemInPort persistCartItemInPort;
 
