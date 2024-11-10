@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import com.emezon.cart.domain.constants.CartIemConstrains;
+import com.emezon.cart.domain.constants.CartItemConstrains;
 
 @Getter
 @Setter
@@ -19,7 +19,7 @@ public class CreateCartItemDTO {
     String articleId;
 
     @NotNull(message = CartItemErrorMessages.QUANTITY_NOT_NULL)
-    @Min(value = CartIemConstrains.MIN_QUANTITY, message = CartItemErrorMessages.INVALID_QUANTITY)
+    @Min(value = CartItemConstrains.MIN_QUANTITY, message = CartItemErrorMessages.INVALID_QUANTITY)
     int quantity;
 
 }

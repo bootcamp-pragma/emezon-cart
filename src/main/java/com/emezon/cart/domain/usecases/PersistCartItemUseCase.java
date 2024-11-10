@@ -4,19 +4,20 @@ import com.emezon.cart.domain.api.IPersistCartInPort;
 import com.emezon.cart.domain.api.IPersistCartItemInPort;
 import com.emezon.cart.domain.api.IRetrieveCartInPort;
 import com.emezon.cart.domain.api.IRetrieveCartItemInPort;
+import com.emezon.cart.domain.constants.CartConstrains;
+import com.emezon.cart.domain.constants.CartItemConstrains;
 import com.emezon.cart.domain.models.Cart;
 import com.emezon.cart.domain.models.CartItem;
 import com.emezon.cart.domain.models.CartStatus;
-import com.emezon.cart.domain.models.external.Article;
-import com.emezon.cart.domain.models.external.Role;
-import com.emezon.cart.domain.models.external.User;
-import com.emezon.cart.domain.models.external.UserRoles;
+import com.emezon.cart.domain.models.external.*;
 import com.emezon.cart.domain.spi.ICartItemRepositoryOutPort;
 import com.emezon.cart.domain.spi.IJwtService;
 import com.emezon.cart.domain.spi.external.IArticleExternalOutPort;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class PersistCartItemUseCase implements IPersistCartItemInPort {
 
@@ -46,7 +47,7 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
     @Override
     public CartItem createCartItem(CartItem cartItem) {
         String userId = validateUserAndGetId();
-        if (cartItem.getQuantity() <= 0) {
+        if (cartItem.getQuantity() < CartItemConstrains.MIN_QUANTITY) {
             throw new RuntimeException("Quantity must be greater than 0");
         }
         Cart cart = cartItem.getCart();
@@ -87,6 +88,20 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
             }
             existingCartItem.setQuantity(existingCartItem.getQuantity() + cartItem.getQuantity());
             return cartItemRepository.save(existingCartItem);
+        }
+        List<String> articleIds = cart.getItems().stream().map(CartItem::getArticleId).toList();
+        Set<String> distinctCategories = new HashSet<>();
+        for (String articleId : articleIds) {
+            Article existingArticle = articleExternalOutPort.getArticleById(articleId);
+            if (existingArticle != null && existingArticle.getCategories() != null) {
+                List<Category> categories = existingArticle.getCategories();
+                for (Category category : categories) {
+                    distinctCategories.add(category.getName());
+                }
+                if (distinctCategories.size() >= CartConstrains.MAX_CATEGORIES_IN_CART) {
+                    throw new RuntimeException("Cart must have at most 3 different categories");
+                }
+            }
         }
         return cartItemRepository.save(cartItem);
     }
