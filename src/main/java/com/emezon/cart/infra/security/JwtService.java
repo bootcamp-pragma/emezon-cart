@@ -1,5 +1,7 @@
 package com.emezon.cart.infra.security;
 
+import com.emezon.cart.domain.models.external.Role;
+import com.emezon.cart.domain.models.external.User;
 import com.emezon.cart.domain.spi.IJwtService;
 import com.emezon.cart.infra.outbound.feign.dtos.UserFeign;
 import io.jsonwebtoken.Claims;
@@ -68,17 +70,20 @@ public class JwtService implements IJwtService {
     }
 
     @Override
-    public String getRoleName(String token) {
-        return extractClaim(token, claims -> (String) claims.get(SecurityConstants.ROLE_NAME_CLAIM));
-    }
-
-    @Override
-    public String getAuthenticatedUserId() {
+    public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
             if (principal instanceof UserFeign user) {
-                return user.getId();
+                User userDomain = new User();
+                userDomain.setId(user.getId());
+                userDomain.setEmail(user.getEmail());
+                Role role = new Role();
+                role.setId(user.getRole().getId());
+                role.setName(user.getRole().getName());
+                role.setDescription(user.getRole().getDescription());
+                userDomain.setRole(role);
+                return userDomain;
             }
         }
         return null;

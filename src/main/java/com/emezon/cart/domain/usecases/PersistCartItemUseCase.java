@@ -8,6 +8,9 @@ import com.emezon.cart.domain.models.Cart;
 import com.emezon.cart.domain.models.CartItem;
 import com.emezon.cart.domain.models.CartStatus;
 import com.emezon.cart.domain.models.external.Article;
+import com.emezon.cart.domain.models.external.Role;
+import com.emezon.cart.domain.models.external.User;
+import com.emezon.cart.domain.models.external.UserRoles;
 import com.emezon.cart.domain.spi.ICartItemRepositoryOutPort;
 import com.emezon.cart.domain.spi.IJwtService;
 import com.emezon.cart.domain.spi.external.IArticleExternalOutPort;
@@ -42,10 +45,10 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
 
     @Override
     public CartItem createCartItem(CartItem cartItem) {
+        String userId = validateUserAndGetId();
         if (cartItem.getQuantity() <= 0) {
             throw new RuntimeException("Quantity must be greater than 0");
         }
-        String userId = jwtService.getAuthenticatedUserId();
         Cart cart = cartItem.getCart();
         if (cart == null) {
             cart = retrieveCart.getCartByUserIdAndStatus(userId, CartStatus.ACTIVE.value()).orElse(null);
@@ -86,6 +89,21 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
             return cartItemRepository.save(existingCartItem);
         }
         return cartItemRepository.save(cartItem);
+    }
+
+    private String validateUserAndGetId() {
+        User user = jwtService.getAuthenticatedUser();
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        Role role = user.getRole();
+        if (role == null) {
+            throw new RuntimeException("User must have a role");
+        }
+        if (!role.getName().equals(UserRoles.CLIENT.name())) {
+            throw new RuntimeException("Only clients can add items to cart");
+        }
+        return user.getId();
     }
 
     @Override

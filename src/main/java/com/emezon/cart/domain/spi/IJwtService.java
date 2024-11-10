@@ -1,5 +1,7 @@
 package com.emezon.cart.domain.spi;
 
+import com.emezon.cart.domain.models.external.User;
+
 import java.util.Map;
 import java.util.function.Function;
 
@@ -11,8 +13,6 @@ public interface IJwtService {
 
     boolean isTokenValid(String token, Map<String, Object> data);
 
-    String getRoleName(String token);
-
-    String getAuthenticatedUserId();
+    User getAuthenticatedUser();
 
 }
