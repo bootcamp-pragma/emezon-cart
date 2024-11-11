@@ -14,10 +14,8 @@ import com.emezon.cart.domain.spi.ICartItemRepositoryOutPort;
 import com.emezon.cart.domain.spi.IJwtService;
 import com.emezon.cart.domain.spi.external.IArticleExternalOutPort;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 public class PersistCartItemUseCase implements IPersistCartItemInPort {
 
@@ -73,6 +71,7 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
             cart = new Cart();
             cart.setClientId(userId);
             cart.setStatus(CartStatus.ACTIVE.value());
+            cartItem.setCart(cart);
             cart.setItems(List.of(cartItem));
             cart = persistCart.createCart(cart);
             return cart.getItems().get(0);
@@ -86,8 +85,12 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
             if (existingCartItem.getQuantity() + cartItem.getQuantity() > article.getStock()) {
                 throw new RuntimeException("Not enough stock");
             }
+            existingCartItem.setCart(cart);
             existingCartItem.setQuantity(existingCartItem.getQuantity() + cartItem.getQuantity());
-            return cartItemRepository.save(existingCartItem);
+//            return cartItemRepository.save(existingCartItem);
+            cart.setUpdatedAt(LocalDateTime.now());
+            persistCart.updateCart(cart);
+            return existingCartItem;
         }
         List<String> articleIds = cart.getItems().stream().map(CartItem::getArticleId).toList();
         Set<String> distinctCategories = new HashSet<>();
@@ -115,7 +118,7 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
         if (role == null) {
             throw new RuntimeException("User must have a role");
         }
-        if (!role.getName().equals(UserRoles.CLIENT.name())) {
+        if (!role.getName().equals(UserRoles.CLIENT.toString())) {
             throw new RuntimeException("Only clients can add items to cart");
         }
         return user.getId();
@@ -123,6 +126,7 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
 
     @Override
     public CartItem updateCartItem(CartItem cartItem) {
+        String userId = validateUserAndGetId();
         if (cartItem.getId() == null) {
             throw new RuntimeException("Cart item must have an id");
         }
@@ -131,9 +135,19 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
             throw new RuntimeException("Cart item not found");
         }
         CartItem cartItemToUpdate = existingCartItem.get();
+        Cart cart = cartItemToUpdate.getCart();
+        if (cart == null) {
+            throw new RuntimeException("Cart not found");
+        }
+        if (!Objects.equals(cart.getClientId(), userId)) {
+            throw new RuntimeException("Cart item does not belong to user");
+        }
         Article article = articleExternalOutPort.getArticleById(cartItemToUpdate.getArticleId());
         if (article == null) {
             throw new RuntimeException("Article not found");
+        }
+        if (!Objects.equals(article.getId(), cartItem.getArticleId())) {
+            throw new RuntimeException("Article cannot be changed");
         }
         if (cartItem.getQuantity() <= 0) {
             throw new RuntimeException("Quantity must be greater than 0");

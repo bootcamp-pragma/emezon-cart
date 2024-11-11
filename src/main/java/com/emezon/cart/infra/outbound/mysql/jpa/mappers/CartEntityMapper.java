@@ -2,6 +2,7 @@ package com.emezon.cart.infra.outbound.mysql.jpa.mappers;
 
 import com.emezon.cart.domain.models.Cart;
 import com.emezon.cart.infra.outbound.mysql.jpa.entities.CartEntity;
+import com.emezon.cart.infra.outbound.mysql.jpa.entities.CartItemEntity;
 
 public class CartEntityMapper {
 
@@ -37,7 +38,11 @@ public class CartEntityMapper {
         entity.setStatus(model.getStatus());
         if (includeItems && model.getItems() != null) {
             entity.setItems(model.getItems()
-                    .stream().map(item -> CartItemEntityMapper.toEntity(item, false))
+                    .stream().map(item -> {
+                        CartItemEntity aux = CartItemEntityMapper.toEntity(item, false);
+                        aux.setCart(entity);
+                        return aux;
+                    })
                     .toList());
         }
         entity.setCreatedAt(model.getCreatedAt());

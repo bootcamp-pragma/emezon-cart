@@ -8,6 +8,9 @@ public class CartMapper {
     private CartMapper() { }
 
     public static CartDTO toDTO(Cart model, boolean includeItems) {
+        if (model == null) {
+            return null;
+        }
         CartDTO dto = new CartDTO();
         dto.setId(model.getId());
         dto.setClientId(model.getClientId());
@@ -24,6 +27,9 @@ public class CartMapper {
     }
 
     public static Cart toModel(CartDTO dto, boolean includeItems) {
+        if (dto == null) {
+            return null;
+        }
         Cart model = new Cart();
         model.setId(dto.getId());
         model.setClientId(dto.getClientId());
