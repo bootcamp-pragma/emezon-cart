@@ -48,17 +48,4 @@ public class CartItemController {
         return ResponseEntity.created(location).body(createdCartItem);
     }
 
-    @PatchMapping("/remove-quantity/{id}")
-    public ResponseEntity<CartItemDTO> addQuantity(
-            @PathVariable String id, @RequestBody @Valid RemoveQuantityDTO removeQuantityDTO) {
-        CartItemDTO updatedCartItem = cartItemHandler.removeQuantity(id, removeQuantityDTO.getQuantity());
-        return ResponseEntity.ok(updatedCartItem);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCartItem(@PathVariable String id) {
-        cartItemHandler.deleteCartItem(id);
-        return ResponseEntity.noContent().build();
-    }
-
 }
