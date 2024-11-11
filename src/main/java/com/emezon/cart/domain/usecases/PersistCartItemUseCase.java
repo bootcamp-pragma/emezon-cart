@@ -149,7 +149,7 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
         if (!Objects.equals(article.getId(), cartItem.getArticleId())) {
             throw new RuntimeException("Article cannot be changed");
         }
-        if (cartItem.getQuantity() <= 0) {
+        if (cartItem.getQuantity() < CartItemConstrains.MIN_QUANTITY) {
             throw new RuntimeException("Quantity must be greater than 0");
         }
         if (cartItem.getQuantity() > article.getStock()) {
@@ -166,26 +166,70 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
 
     @Override
     public void deleteCartItem(String id) {
-        cartItemRepository.deleteById(id);
-    }
-
-    @Override
-    public CartItem removeQuantityFromCartItem(String id, int quantity) {
+        String userId = validateUserAndGetId();
         Optional<CartItem> existingCartItem = retrieveCartItem.getCartItemById(id);
         if (existingCartItem.isEmpty()) {
             throw new RuntimeException("Cart item not found");
         }
         CartItem cartItem = existingCartItem.get();
-        if (cartItem.getQuantity() - quantity <= 0) {
-            String cartId = cartItem.getCart().getId();
-            cartItemRepository.deleteById(id);
-            Optional<Cart> cart = retrieveCart.getCartById(cartId);
-            if (cart.isPresent() && cart.get().getItems().isEmpty()) {
-                persistCart.deleteCart(cartId);
+        Optional<Cart> existingCart = retrieveCart.getCartById(cartItem.getCart().getId());
+        if (existingCart.isEmpty()) {
+            throw new RuntimeException("Cart not found");
+        }
+        Cart cart = existingCart.get();
+        if (!Objects.equals(cart.getClientId(), userId)) {
+            throw new RuntimeException("Cart item does not belong to user");
+        }
+        cart.setItems(cart.getItems().stream()
+                .filter(item -> !Objects.equals(item.getId(), id)).peek(item -> item.setCart(cart))
+                .toList());
+        cart.setUpdatedAt(LocalDateTime.now());
+        if (cart.getItems().isEmpty()) {
+            persistCart.deleteCart(cart.getId());
+        } else {
+            persistCart.updateCart(cart);
+        }
+    }
+
+    @Override
+    public CartItem removeQuantityFromCartItem(String id, int quantity) {
+        String userId = validateUserAndGetId();
+        Optional<CartItem> existingCartItem = retrieveCartItem.getCartItemById(id);
+        if (existingCartItem.isEmpty()) {
+            throw new RuntimeException("Cart item not found");
+        }
+        CartItem cartItem = existingCartItem.get();
+        Optional<Cart> existingCart = retrieveCart.getCartById(cartItem.getCart().getId());
+        if (existingCart.isEmpty()) {
+            throw new RuntimeException("Cart not found");
+        }
+        Cart cart = existingCart.get();
+        if (!Objects.equals(cart.getClientId(), userId)) {
+            throw new RuntimeException("Cart item does not belong to user");
+        }
+        if ((cartItem.getQuantity() - quantity) < CartItemConstrains.MIN_QUANTITY) {
+            cart.setItems(cart.getItems().stream()
+                    .filter(item -> !Objects.equals(item.getId(), id)).peek(item -> item.setCart(cart))
+                    .toList());
+            cart.setUpdatedAt(LocalDateTime.now());
+            if (cart.getItems().isEmpty()) {
+                persistCart.deleteCart(cart.getId());
+            } else {
+                persistCart.updateCart(cart);
             }
             return null;
         }
-        cartItem.setQuantity(cartItem.getQuantity() - quantity);
-        return cartItemRepository.save(cartItem);
+        cart.setItems(cart.getItems().stream()
+                .peek(item -> {
+                    item.setCart(cart);
+                    if (Objects.equals(item.getId(), id)) {
+                        item.setQuantity(item.getQuantity() - quantity);
+                        cartItem.setCart(cart);
+                        cartItem.setQuantity(item.getQuantity());
+                    }
+                }).toList());
+        cart.setUpdatedAt(LocalDateTime.now());
+        persistCart.updateCart(cart);
+        return cartItem;
     }
 }
