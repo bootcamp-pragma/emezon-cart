@@ -2,6 +2,7 @@ package com.emezon.cart.infra.inbound.rest.controllers;
 
 import com.emezon.cart.app.dtos.CartItemDTO;
 import com.emezon.cart.app.dtos.CreateCartItemDTO;
+import com.emezon.cart.app.dtos.RemoveQuantityDTO;
 import com.emezon.cart.app.handlers.ICartItemHandler;
 import com.emezon.cart.domain.utils.PaginatedResponse;
 import com.emezon.cart.infra.inbound.rest.constants.PaginatedConstants;
@@ -45,6 +46,19 @@ public class CartItemController {
         URI location = URI.create(RestApiConstants.API_CART_ITEM);
         CartItemDTO createdCartItem = cartItemHandler.createCartItem(createCartItemDTO);
         return ResponseEntity.created(location).body(createdCartItem);
+    }
+
+    @PatchMapping("/remove-quantity/{id}")
+    public ResponseEntity<CartItemDTO> addQuantity(
+            @PathVariable String id, @RequestBody @Valid RemoveQuantityDTO removeQuantityDTO) {
+        CartItemDTO updatedCartItem = cartItemHandler.removeQuantity(id, removeQuantityDTO.getQuantity());
+        return ResponseEntity.ok(updatedCartItem);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCartItem(@PathVariable String id) {
+        cartItemHandler.deleteCartItem(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

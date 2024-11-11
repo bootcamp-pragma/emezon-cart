@@ -12,7 +12,7 @@ public interface ICartRepositoryOutPort {
 
     Optional<Cart> findById(String id);
 
-    Optional<Cart> findByUserIdAndStatus(String userId, int status);
+    Optional<Cart> findByUserId(String userId);
 
     PaginatedResponse<Cart> findAll(PaginatedResponseParams params);
 

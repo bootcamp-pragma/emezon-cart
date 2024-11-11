@@ -8,7 +8,6 @@ import com.emezon.cart.domain.constants.CartConstrains;
 import com.emezon.cart.domain.constants.CartItemConstrains;
 import com.emezon.cart.domain.models.Cart;
 import com.emezon.cart.domain.models.CartItem;
-import com.emezon.cart.domain.models.CartStatus;
 import com.emezon.cart.domain.models.external.*;
 import com.emezon.cart.domain.spi.ICartItemRepositoryOutPort;
 import com.emezon.cart.domain.spi.IJwtService;
@@ -50,7 +49,7 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
         }
         Cart cart = cartItem.getCart();
         if (cart == null) {
-            cart = retrieveCart.getCartByUserIdAndStatus(userId, CartStatus.ACTIVE.value()).orElse(null);
+            cart = retrieveCart.getCartByUserId(userId).orElse(null);
         } else {
             if (cart.getId() == null) {
                 throw new RuntimeException("Cart must have an id");
@@ -70,12 +69,15 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
         if (cart == null) {
             cart = new Cart();
             cart.setClientId(userId);
-            cart.setStatus(CartStatus.ACTIVE.value());
             cartItem.setCart(cart);
             cart.setItems(List.of(cartItem));
+            cart.setTotal(cartItem.getQuantity() * article.getPrice());
             cart = persistCart.createCart(cart);
-            return cart.getItems().get(0);
+            CartItem cartItemToReturn = cart.getItems().get(0);
+            cartItemToReturn.setCart(cart);
+            return cartItemToReturn;
         }
+        cart.setTotal(cart.getTotal() + (cartItem.getQuantity() * article.getPrice()));
         cartItem.setCart(cart);
         CartItem existingCartItem = cart.getItems().stream()
                 .filter(item -> item.getArticleId().equals(cartItem.getArticleId()))
@@ -87,7 +89,6 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
             }
             existingCartItem.setCart(cart);
             existingCartItem.setQuantity(existingCartItem.getQuantity() + cartItem.getQuantity());
-//            return cartItemRepository.save(existingCartItem);
             cart.setUpdatedAt(LocalDateTime.now());
             persistCart.updateCart(cart);
             return existingCartItem;
@@ -106,7 +107,12 @@ public class PersistCartItemUseCase implements IPersistCartItemInPort {
                 }
             }
         }
-        return cartItemRepository.save(cartItem);
+        List<CartItem> items = new ArrayList<>(cart.getItems());
+        items.add(cartItem);
+        cart.setItems(items);
+        cart.setUpdatedAt(LocalDateTime.now());
+        persistCart.updateCart(cart);
+        return cartItem;
     }
 
     private String validateUserAndGetId() {

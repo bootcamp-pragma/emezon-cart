@@ -10,9 +10,9 @@ public interface IRetrieveCartInPort {
 
     Optional<Cart> getCartById(String id);
 
-    Optional<Cart> getCartByUserIdAndStatus(String userId, int status);
+    Optional<Cart> getCartByUserId(String userId);
 
-    boolean userHasActiveCart(String userId);
+    boolean userHasCart(String userId);
 
     PaginatedResponse<Cart> getAllCarts(PaginatedResponseParams params);
 

@@ -23,8 +23,6 @@ public class MySQLJpaCartAdapter implements ICartRepositoryOutPort {
     public Cart save(Cart cart) {
         boolean includeItems = cart.getItems() != null;
         CartEntity entity = CartEntityMapper.toEntity(cart, includeItems);
-        System.out.println("entity: " + entity.getItems());
-        System.out.println("cart: " + entity.getItems().get(0).getCart());
         CartEntity savedEntity = repository.save(entity);
         return CartEntityMapper.toModel(savedEntity, includeItems);
     }
@@ -36,8 +34,8 @@ public class MySQLJpaCartAdapter implements ICartRepositoryOutPort {
     }
 
     @Override
-    public Optional<Cart> findByUserIdAndStatus(String userId, int status) {
-        CartEntity entity = repository.findByClientIdAndStatus(userId, status).orElse(null);
+    public Optional<Cart> findByUserId(String userId) {
+        CartEntity entity = repository.findByClientId(userId).orElse(null);
         return Optional.ofNullable(CartEntityMapper.toModel(entity, true));
     }
 

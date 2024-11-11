@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface IMySQLJpaCartRepository extends JpaRepository<CartEntity, String> {
 
-    Optional<CartEntity> findByClientIdAndStatus(String clientId, int status);
+    Optional<CartEntity> findByClientId(String clientId);
 
 }
