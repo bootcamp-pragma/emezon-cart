@@ -20,4 +20,15 @@ public class CartItemService implements ICartItemHandler {
         return CartItemMapper.toDTO(savedCartItem, true);
     }
 
+    @Override
+    public CartItemDTO removeQuantity(String id, int quantity) {
+        CartItem savedCartItem = persistCartItemInPort.removeQuantityFromCartItem(id, quantity);
+        return CartItemMapper.toDTO(savedCartItem, true);
+    }
+
+    @Override
+    public void deleteCartItem(String id) {
+        persistCartItemInPort.deleteCartItem(id);
+    }
+
 }
