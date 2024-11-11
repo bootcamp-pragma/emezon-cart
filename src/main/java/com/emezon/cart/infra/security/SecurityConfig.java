@@ -1,7 +1,9 @@
 package com.emezon.cart.infra.security;
 
+import com.emezon.cart.domain.models.external.UserRoles;
 import com.emezon.cart.domain.spi.IJwtHolder;
 import com.emezon.cart.domain.spi.IJwtService;
+import com.emezon.cart.infra.inbound.rest.constants.RestApiConstants;
 import com.emezon.cart.infra.outbound.feign.IUserFeignClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -49,6 +51,7 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(SecurityConstants.WHITE_LIST_URL).permitAll()
+                        .requestMatchers(RestApiConstants.API_CART + "/**").hasRole(UserRoles.CLIENT.toString())
                         .anyRequest().authenticated()
                 )
                 .formLogin(AbstractHttpConfigurer::disable)
