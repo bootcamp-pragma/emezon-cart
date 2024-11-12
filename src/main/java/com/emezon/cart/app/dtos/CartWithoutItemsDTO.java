@@ -1,6 +1,5 @@
 package com.emezon.cart.app.dtos;
 
-import com.emezon.cart.domain.models.CartItem;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,13 +12,12 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartDTO {
+public class CartWithoutItemsDTO {
 
     private String id;
     private String clientId;
     private double total;
     private int status;
-    private List<CartItemWithoutCartDTO> items;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 

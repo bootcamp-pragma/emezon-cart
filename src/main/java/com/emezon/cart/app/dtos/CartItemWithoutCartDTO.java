@@ -1,6 +1,5 @@
 package com.emezon.cart.app.dtos;
 
-import com.emezon.cart.domain.models.Cart;
 import com.emezon.cart.domain.models.external.Article;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +10,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItemDTO {
+public class CartItemWithoutCartDTO {
 
     private String id;
-    private CartWithoutItemsDTO cart;
     private String articleId;
     private Article article;
     private int quantity;
