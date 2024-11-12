@@ -17,13 +17,13 @@ public class CartItemService implements ICartItemHandler {
     public CartItemDTO createCartItem(CreateCartItemDTO createCartItemDTO) {
         CartItem cartItem = CartItemMapper.toModel(createCartItemDTO);
         CartItem savedCartItem = persistCartItemInPort.createCartItem(cartItem);
-        return CartItemMapper.toDTO(savedCartItem, true);
+        return CartItemMapper.toDTO(savedCartItem);
     }
 
     @Override
     public CartItemDTO removeQuantity(String id, int quantity) {
         CartItem savedCartItem = persistCartItemInPort.removeQuantityFromCartItem(id, quantity);
-        return CartItemMapper.toDTO(savedCartItem, true);
+        return CartItemMapper.toDTO(savedCartItem);
     }
 
     @Override
