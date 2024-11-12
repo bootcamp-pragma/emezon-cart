@@ -12,6 +12,8 @@ public interface IRetrieveCartInPort {
 
     Optional<Cart> getCartByUserId(String userId);
 
+    Optional<Cart> getCartOfAuthenticatedUser();
+
     boolean userHasCart(String userId);
 
     PaginatedResponse<Cart> getAllCarts(PaginatedResponseParams params);
