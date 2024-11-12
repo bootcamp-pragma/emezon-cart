@@ -10,19 +10,11 @@ public class Article {
     private String description;
     private double price;
     private int stock;
+    private Brand brand;
     private LocalDateTime restockDate;
     private List<Category> categories;
 
     public Article() {}
-
-    public Article(String id, String name, String description, double price, int stock, List<Category> categories) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.stock = stock;
-        this.categories = categories;
-    }
 
     public String getId() {
         return id;
@@ -62,6 +54,14 @@ public class Article {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 
     public LocalDateTime getRestockDate() {
