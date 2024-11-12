@@ -1,5 +1,7 @@
 package com.emezon.cart.infra.config;
 
+import com.emezon.cart.app.handlers.ICartHandler;
+import com.emezon.cart.app.services.CartService;
 import com.emezon.cart.domain.api.IPersistCartInPort;
 import com.emezon.cart.domain.api.IRetrieveCartInPort;
 import com.emezon.cart.domain.spi.ICartRepositoryOutPort;
@@ -26,12 +28,17 @@ public class CartConfig {
 
     @Bean
     public IRetrieveCartInPort retrieveCartInPort() {
-        return new RetrieveCartUseCase(cartRepositoryOutPort());
+        return new RetrieveCartUseCase(cartRepositoryOutPort(), jwtService);
     }
 
     @Bean
     public IPersistCartInPort persistCartInPort() {
         return new PersistCartUseCase(cartRepositoryOutPort(), retrieveCartInPort(), jwtService);
+    }
+
+    @Bean
+    public ICartHandler cartHandler() {
+        return new CartService(retrieveCartInPort());
     }
 
 }
